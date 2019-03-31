@@ -1,9 +1,8 @@
 from ev3dev2.led import Leds
 from ev3dev2.sound import Sound
 from ev3dev2.motor import LargeMotor, OUTPUT_B, OUTPUT_C, SpeedPercent, MoveTank
-from ev3dev2.sensor import INPUT_1, INPUT_4
 from ev3dev2.sensor.lego import TouchSensor
-from ev3dev2.sensor.lego import ColorSensor
+from ColorSensorFast import ColorSensorFast as ColorSensor
 from ev3dev2.button import Button
 from time import sleep
 import sys
@@ -17,17 +16,17 @@ class Robot:
     WHITE = 'white'
     SILVER = 'silver'
 
-    left_white = (240, 243,245)
-    right_white = (250, 245, 253)
+    # left_white = (240, 243,245)
+    # right_white = (250, 245, 253)
 
-    left_black = (31, 36, 30)
-    right_black = (30, 40, 31)
+    # left_black = (31, 36, 30)
+    # right_black = (30, 40, 31)
 
-    left_green = (52, 135, 70)
-    right_green = (50, 137, 73)
+    # left_green = (52, 135, 70)
+    # right_green = (50, 137, 73)
 
-    left_colours = [left_white, left_green, left_black]
-    right_colours = [right_white, right_green, right_black]
+    # left_colours = [left_white, left_green, left_black]
+    # right_colours = [right_white, right_green, right_black]
 
     def rgb_to_color(self, rgb):
         if rgb[0] > 150:
@@ -57,15 +56,16 @@ class Robot:
 
         self.leds = Leds()
 
-        self.color_sensor_left = ColorSensor(INPUT_1)
+        self.color_sensor_left = ColorSensor('in1')
 
-        self.color_sensor_right = ColorSensor(INPUT_4)
+        self.color_sensor_right = ColorSensor('in4')
 
         self.sound = Sound()
 
         self.button = Button()
 
         self.tank_drive = MoveTank(OUTPUT_B, OUTPUT_C)
+
 
     def move_tank(self, left_speed, right_speed):
         self.tank_drive.on(left_speed, right_speed)
@@ -86,15 +86,12 @@ class Robot:
         print(text, file=sys.stderr)
 
     def calibrate_colour_sensors(self):
-        # self.sound.speak('Calibrating color sensors!')
-        # self.sound.speak('Please put both color sensors on white and press the touch sensor')
-        # self.touch_sensor.wait_for_pressed()
-
         self.leds.set_color("LEFT", "RED")
         self.leds.set_color("RIGHT", "RED")
         sleep(2.0)
-        self.color_sensor_left.calibrate_white()
+
         self.color_sensor_right.calibrate_white()
+        self.color_sensor_left.calibrate_white()
         self.leds.set_color("LEFT", "GREEN")
         self.leds.set_color("RIGHT", "GREEN")
 

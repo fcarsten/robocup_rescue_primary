@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 from time import sleep
-from robot import Robot
+from robot_fast import Robot
 import sys
 
 robot = Robot()
 
-robot.speak('Ready')
+robot.speak('Starting')
 # Press left to calibrate, right to go straight to program
 
 # robot.touch_sensor.wait_for_pressed()
 
 robot.calibrate_colour_sensors()
 
-normal_speed = 7
+normal_speed = 10
 slow_speed = 5
 stop_speed = 0
 
@@ -25,6 +25,7 @@ def rescue_main_loop():
 
         if left_colour == Robot.GREEN and right_colour == Robot.GREEN:
             do_rescue()
+            return
         elif left_colour == Robot.GREEN:
             turn_left()
         elif right_colour == Robot.GREEN:
@@ -49,7 +50,7 @@ def turn_right():
         if color == Robot.WHITE:
             return
         elif color == Robot.GREEN:
-            robot.move_tank(slow_speed, slow_speed+1)
+            robot.move_tank(slow_speed, slow_speed)
             robot.set_leds("BLACK", "GREEN")
         elif color == Robot.BLACK:
             robot.stop()
@@ -64,7 +65,7 @@ def turn_left():
         if color == Robot.WHITE:
             return
         elif color == Robot.GREEN:
-            robot.move_tank(slow_speed+1, slow_speed)
+            robot.move_tank(slow_speed, slow_speed)
             robot.set_leds("GREEN", "BLACK")
         elif color == Robot.BLACK:
             robot.stop()
@@ -78,10 +79,10 @@ def do_rescue():
 
 rescue_main_loop()
 robot.off()
-sleep(2)
+# sleep(2)
 
-while not robot.touch_sensor.is_pressed:
-    robot.log_colour()
+# while not robot.touch_sensor.is_pressed:
+#     robot.log_colour()
 
 robot.speak('Bye!')
 
